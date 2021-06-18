@@ -1,7 +1,7 @@
 from django.db.models import query
 from django.forms import ModelForm
 from django import forms
-from apps.users_app.models import Administrator, User, UserTyp
+from apps.users_app.models import Administrator, User, UserType
 
 
 
@@ -39,7 +39,7 @@ class UserForm(ModelForm):
         class Meta:
                 model = User 
                 fields = ['first_name1','first_name2','last_name1','last_name2','rut','type','email', 'password']
-                typea = forms.ModelChoiceField(queryset=UserTyp.objects.all(), required=False, help_text="Company")
+                typea = forms.ModelChoiceField(queryset=UserType.objects.all(), required=False, help_text="Company")
 
                 widgets = {
                         'first_name1': forms.TextInput(attrs = {"class":"form-control "}),

@@ -1,8 +1,8 @@
-from apps.users_app.models import UserTyp
+from apps.users_app.models import UserType
 
 
 def make_user_type():
-    all_users_type = UserTyp.objects.all()
+    all_users_type = UserType.objects.all()
     all_users_type.delete()
-    secretaria = UserTyp.objects.create(type_name = "secretaria")
-    procuradora = UserTyp.objects.create(type_name = "procuradora")
+    secretaria = UserType.objects.create(type_name = "secretaria")
+    procuradora = UserType.objects.create(type_name = "procuradora")

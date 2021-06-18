@@ -1,4 +1,4 @@
-from apps.users_app.models import Administrator, User, UserTyp
+from apps.users_app.models import Administrator, User, UserType
 from django.shortcuts import redirect, render
 from apps.users_app.forms.register import UserForm
 

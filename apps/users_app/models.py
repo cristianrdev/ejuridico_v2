@@ -67,7 +67,7 @@ class Administrator(models.Model): #super usuario que crea o elimina User (hay q
 
         return None 
 
-class UserTyp(models.Model):
+class UserType(models.Model):
     type_name = models.CharField(max_length=50, blank=False, null=False) #secretaria, abogado, o procuradora
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -85,7 +85,7 @@ class User(models.Model):
     email = models.CharField(max_length=30, blank=False, null=False, validators=[validarEmail])
     password = models.CharField(max_length=100, validators=[ValidarLongitudPassword])
 
-    type = models.ForeignKey(UserTyp, related_name="type_user", on_delete = models.CASCADE)
+    type = models.ForeignKey(UserType, related_name="type_user", on_delete = models.CASCADE)
     users_created_by = models.ForeignKey(Administrator, related_name="administrator_create", on_delete = models.CASCADE)
     # user_manage_lawsuit = models.ManyToManyField(Lawsuit, related_name="lawsuit_managed_by")
 
@@ -192,7 +192,7 @@ class Defendant(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    
+
 
 class Lawsuit(models.Model):
     num_promissory_notes = models.CharField(max_length=45,blank=False, null=False)   #este campo
