@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.11.0/devicon.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="" href="{% static 'jquery.rut.js' %}">
+    <script> src = "{% static 'validarRUT.js' %}"</script>
+    <script src="../../secr_app/statics/validarRUT.js">     </script>
+
+
+
+
+
+
+    <title>Nuevo Usuario</title>
+</head>
+
+<body>
+
+    <div class="container">
+        {% include "user_bar.html" %}
+
+        <h2 class="text-muted">Nuevo usuario en E-Jurídico</h2>
+        <div class="row">
+            <a href="/">Atrás</a>
+            <div class="col-4 bg-light p-2 border ">
+                <form action="/administrator/new_user" method="POST" class="m-2 ">
+                    {% csrf_token %}
+                    {{userform.as_p}}
+                    <button type='submit' class="btn btn-primary col-auto m-2">Registrar Usuario</button>
+                </form>
+            </div>
+            <a href="/">Atrás</a>
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+</body>
+
+</html>
