@@ -97,6 +97,47 @@ def create_lawsuit(request):
         }
         return render(request, 'new_lawsuit.html',context)
 
+def lawsuit_detail(request, id_lawsuit):
+    if not 'id' in request.session or request.session['user_type'] != "secretaria":
+        return redirect('/')
+    this_user = User.objects.get(id = int(request.session['id'])) 
+    this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
+    this_defendant = this_lawsuit.current_defendant
+    this_lawsuit_history = this_lawsuit.lawsuit_history
+    context = {
+        'this_user' : this_user,
+        'this_lawsuit' : this_lawsuit,
+        'this_defendant' : this_defendant,
+        'this_lawsuit_history' : this_lawsuit_history,
+        
+
+    }
+    return render(request, "lawsuit_detail.html", context)
+
+def re_make_lawsuitpdf(request, id_lawsuit):
+    if not 'id' in request.session or request.session['user_type'] != "secretaria":
+        return redirect('/')
+    this_user = User.objects.get(id = int(request.session['id'])) 
+    this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
+    this_defendant = this_lawsuit.current_defendant
+    context = {
+                # 'first_name1' : new_defendant.first_name1,
+                # 'first_name2' : new_defendant.first_name2,
+                # 'last_name1' : new_defendant.last_name1,
+                # 'last_name2' : new_defendant.last_name2,
+                # 'address' : new_defendant.address,
+                # 'rut' : new_defendant.rut,
+
+                # 'new_lawsuit' : new_lawsuit.num_promissory_notes,
+                # 'rut' : new_lawsuit.final_date,
+                # 'rut' : new_lawsuit.rut,
+                'defendant' : this_defendant,
+                'lawsuit' : this_lawsuit,
+
+    }
+    pdf = render_to_pdf('lawsuitpdf.html', context)
+    return  HttpResponse(pdf, content_type='application/pdf') 
+
 def delete_lawsuit(request, id_lawsuit):
     if not 'id' in request.session or request.session['user_type'] != "secretaria":
         return redirect('/')
