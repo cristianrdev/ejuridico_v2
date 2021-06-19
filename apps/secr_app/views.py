@@ -4,10 +4,12 @@ from apps.users_app.models import Administrator, Court, Lawsuit_State, User, Use
 from django.shortcuts import redirect, render
 from apps.users_app.forms.register import UserForm
 from .forms.new_lawsuit import LawsuitForm, DefendantForm
-from apps.secr_app.forms.new_movement import NewMovementForm
+from apps.secr_app.forms.new_movement import NewMovementForm, DocumentForm
 from apps.users_app.models import    Lawsuit, Defendant, LawsuitHistory
 from .utils import render_to_pdf
 from django.http import HttpResponse
+
+
 # import webbrowser
 # 
 
@@ -105,6 +107,7 @@ def lawsuit_detail(request, id_lawsuit):
     this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
     this_defendant = this_lawsuit.current_defendant
     this_lawsuit_history = this_lawsuit.lawsuit_history
+    document_form = DocumentForm
     # new_movement_form = NewMovementForm()
     current_state = this_lawsuit.current_demand_state
     new_movement_form = NewMovementForm(initial= {'current_demand_state': current_state})
@@ -114,6 +117,7 @@ def lawsuit_detail(request, id_lawsuit):
         'this_defendant' : this_defendant,
         'this_lawsuit_history' : this_lawsuit_history,
         'new_movement_form' : new_movement_form,
+        'document_form' : document_form,
         
 
     }
@@ -152,7 +156,7 @@ def update_lawsuit_state(request, id_lawsuit):
 
     
 
-    if NewMovementForm(request.POST).is_valid:
+    if NewMovementForm(request.POST).is_valid and DocumentForm(request.POST, request.FILES).is_valid:
         print("cambio es valido "*20)
         this_lawsuit.current_demand_state = new_state
         this_lawsuit.save(update_fields = ['current_demand_state'])
@@ -161,6 +165,7 @@ def update_lawsuit_state(request, id_lawsuit):
                 past_state = past_state, #estado primera creación
                 current_state = this_lawsuit.current_demand_state,
                 change_made_by = this_user,
+                docfile=request.FILES['docfile'],
 
             )
 
@@ -168,7 +173,7 @@ def update_lawsuit_state(request, id_lawsuit):
 
     else:
         print("cambio NO valido"*20)
-
+    document_form = DocumentForm()
     this_defendant = this_lawsuit.current_defendant
     this_lawsuit_history = this_lawsuit.lawsuit_history
     current_state = this_lawsuit.current_demand_state
@@ -179,6 +184,7 @@ def update_lawsuit_state(request, id_lawsuit):
         'this_defendant' : this_defendant,
         'this_lawsuit_history' : this_lawsuit_history,
         'new_movement_form' : new_movement_form,
+        'document_form' : document_form,
         
 
     }

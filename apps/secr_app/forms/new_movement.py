@@ -20,3 +20,6 @@ class NewMovementForm(ModelForm):
 
         }
 
+
+class DocumentForm(forms.Form):
+    docfile = forms.FileField(label='Seleccione el documento')

@@ -222,5 +222,6 @@ class LawsuitHistory(models.Model):
     past_state = models.ForeignKey(Lawsuit_State, related_name="lawsuit_past_state", on_delete = models.CASCADE)
     current_state = models.ForeignKey(Lawsuit_State, related_name="lawsuit_current_state", on_delete = models.CASCADE)
     change_made_by = models.ForeignKey(User, related_name="lawsuit_change", on_delete = models.CASCADE)
+    docfile = models.FileField(upload_to='documents/%Y/%m/%d', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
