@@ -46,7 +46,7 @@
                     </div>
 
                 </form>
-
+                
 
 
             </div>
@@ -72,6 +72,9 @@
                 $("form#multiple-events input").rut({ validateOn: 'keyup change' }).on('rutInvalido', function () { $(this).parents(".control-group").addClass("error") }).on('rutValido', function () { $(this).parents(".control-group").removeClass("error") });
             });
         </script>
+        <!-- <script>
+            window.open('/', '#boton'); 
+        </script> -->
         <script> // trasnforma los montos a formato número (sin decimales)
             $("#monto1, #monto2").on('keyup', function () {
                 var n = parseInt($(this).val().replace(/\D/g, ''), 10);

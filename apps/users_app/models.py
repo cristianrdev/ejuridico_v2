@@ -214,3 +214,11 @@ class Lawsuit(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class LawsuitHistory(models.Model):
+    lawsuit_associate = models.ForeignKey(Lawsuit, related_name="lawsuit_history", on_delete = models.CASCADE)
+    past_state = models.ForeignKey(Lawsuit_State, related_name="lawsuit_past_state", on_delete = models.CASCADE)
+    current_state = models.ForeignKey(Lawsuit_State, related_name="lawsuit_current_state", on_delete = models.CASCADE)
+    change_made_by = models.ForeignKey(User, related_name="lawsuit_change", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

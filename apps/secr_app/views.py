@@ -4,7 +4,7 @@ from apps.users_app.models import Administrator, Court, Lawsuit_State, User, Use
 from django.shortcuts import redirect, render
 from apps.users_app.forms.register import UserForm
 from .forms.new_lawsuit import LawsuitForm, DefendantForm
-from apps.users_app.models import    Lawsuit, Defendant
+from apps.users_app.models import    Lawsuit, Defendant, LawsuitHistory
 from .utils import render_to_pdf
 from django.http import HttpResponse
 # import webbrowser
@@ -56,6 +56,14 @@ def create_lawsuit(request):
             new_lawsuit.lawsuit_created_by = this_user
             new_lawsuit.save()
 
+            new_history  = LawsuitHistory.objects.create(
+                lawsuit_associate = new_lawsuit, #estado primera creación
+                past_state = new_lawsuit.current_demand_state, #estado primera creación
+                current_state = new_lawsuit.current_demand_state,
+                change_made_by = this_user,
+
+            )
+
 
 
             context = {
@@ -75,6 +83,7 @@ def create_lawsuit(request):
             }
 
             pdf = render_to_pdf('lawsuitpdf.html', context)
+            # response = "escrito%s.pdf" %("new_defendant.first_name")
             # webbrowser.open_new('/') 
             redirect('/')
             return  HttpResponse(pdf, content_type='application/pdf')
