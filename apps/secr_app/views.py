@@ -4,6 +4,7 @@ from apps.users_app.models import Administrator, Court, Lawsuit_State, User, Use
 from django.shortcuts import redirect, render
 from apps.users_app.forms.register import UserForm
 from .forms.new_lawsuit import LawsuitForm, DefendantForm
+from apps.secr_app.forms.new_movement import NewMovementForm
 from apps.users_app.models import    Lawsuit, Defendant, LawsuitHistory
 from .utils import render_to_pdf
 from django.http import HttpResponse
@@ -104,11 +105,15 @@ def lawsuit_detail(request, id_lawsuit):
     this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
     this_defendant = this_lawsuit.current_defendant
     this_lawsuit_history = this_lawsuit.lawsuit_history
+    # new_movement_form = NewMovementForm()
+    current_state = this_lawsuit.current_demand_state
+    new_movement_form = NewMovementForm(initial= {'current_demand_state': current_state})
     context = {
         'this_user' : this_user,
         'this_lawsuit' : this_lawsuit,
         'this_defendant' : this_defendant,
         'this_lawsuit_history' : this_lawsuit_history,
+        'new_movement_form' : new_movement_form,
         
 
     }
@@ -120,23 +125,69 @@ def re_make_lawsuitpdf(request, id_lawsuit):
     this_user = User.objects.get(id = int(request.session['id'])) 
     this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
     this_defendant = this_lawsuit.current_defendant
-    context = {
-                # 'first_name1' : new_defendant.first_name1,
-                # 'first_name2' : new_defendant.first_name2,
-                # 'last_name1' : new_defendant.last_name1,
-                # 'last_name2' : new_defendant.last_name2,
-                # 'address' : new_defendant.address,
-                # 'rut' : new_defendant.rut,
 
-                # 'new_lawsuit' : new_lawsuit.num_promissory_notes,
-                # 'rut' : new_lawsuit.final_date,
-                # 'rut' : new_lawsuit.rut,
+   
+    context = {
+
                 'defendant' : this_defendant,
                 'lawsuit' : this_lawsuit,
 
     }
     pdf = render_to_pdf('lawsuitpdf.html', context)
     return  HttpResponse(pdf, content_type='application/pdf') 
+
+
+
+def update_lawsuit_state(request, id_lawsuit):
+    if not 'id' in request.session or request.session['user_type'] != "secretaria":
+        return redirect('/')
+
+    this_user = User.objects.get(id = int(request.session['id'])) 
+    this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
+    past_state = this_lawsuit.current_demand_state
+    
+    
+    new_state_id = request.POST['current_demand_state']
+    new_state = Lawsuit_State.objects.get(id = int(new_state_id))
+
+    
+
+    if NewMovementForm(request.POST).is_valid:
+        print("cambio es valido "*20)
+        this_lawsuit.current_demand_state = new_state
+        this_lawsuit.save(update_fields = ['current_demand_state'])
+        new_history  = LawsuitHistory.objects.create(          #generar el cambio en el historial de la demanda
+                lawsuit_associate = this_lawsuit, #estado primera creación
+                past_state = past_state, #estado primera creación
+                current_state = this_lawsuit.current_demand_state,
+                change_made_by = this_user,
+
+            )
+
+
+
+    else:
+        print("cambio NO valido"*20)
+
+    this_defendant = this_lawsuit.current_defendant
+    this_lawsuit_history = this_lawsuit.lawsuit_history
+    current_state = this_lawsuit.current_demand_state
+    new_movement_form = NewMovementForm(initial= {'current_demand_state': current_state})
+    context = {
+        'this_user' : this_user,
+        'this_lawsuit' : this_lawsuit,
+        'this_defendant' : this_defendant,
+        'this_lawsuit_history' : this_lawsuit_history,
+        'new_movement_form' : new_movement_form,
+        
+
+    }
+    return render(request, "lawsuit_detail.html", context)
+
+
+
+
+
 
 def delete_lawsuit(request, id_lawsuit):
     if not 'id' in request.session or request.session['user_type'] != "secretaria":

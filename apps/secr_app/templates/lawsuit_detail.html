@@ -34,6 +34,15 @@
                 <p>Fecha Suscripción Pagaré: {{this_lawsuit.suscription_date}}</p>
                 <p>Cuantía de la Demanda: {{this_lawsuit.demand_amount}}</p>
             </div>
+            <div class="col-auto">
+                <h5 class="text-center">Ingrese Nuevo movimiento</h5>
+                <form action="/secretary/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="POST">
+                    {% csrf_token %}
+                    {{new_movement_form.as_p}}
+                    <button type='submit' class="btn btn-primary col-auto m-2">Registrar Movimiento</button>
+                </form>
+
+            </div>
 
 
 

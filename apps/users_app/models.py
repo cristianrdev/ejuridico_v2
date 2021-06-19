@@ -176,6 +176,8 @@ class Lawsuit_State(models.Model):
     # demand_state = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.name_state
 
 class Court(models.Model):
     cod_tribunal = models.CharField(max_length=6, default="00")
