@@ -46,9 +46,8 @@ class UserForm(ModelForm):
                         'first_name2': forms.TextInput(attrs = {"class":"form-control "}),
                         'last_name1': forms.TextInput(attrs = {"class":"form-control "}),
                         'last_name2': forms.TextInput(attrs = {"class":"form-control "}),
-                        # 'type': forms.Select(choices=UserTyp.objects.all().values_list('id','type_name'), attrs = {"class":"form-control "},),
                         'type': forms.Select( attrs = {"class":"form-control "},),
-                        'rut': forms.TextInput(attrs = {"class":"form-control", "id": "rut"}),
+                        'rut': forms.TextInput(attrs = {"class":"form-control", "id": "rut", "onkeypress":"isInputNumber(event)"}),
                         'email': forms.TextInput(attrs = {"class":"form-control "}),
                         'password' : forms.PasswordInput(attrs = {"class":"form-control "}),
 

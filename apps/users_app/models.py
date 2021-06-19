@@ -3,7 +3,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password, check_password
 from django import forms
 import re
-import datetime
+
+from datetime import date, datetime, timedelta
 
 # Create your models here.
 
@@ -81,7 +82,7 @@ class User(models.Model):
     first_name2 = models.CharField(max_length=45, blank=False, null=False)
     last_name1 = models.CharField(max_length=45, blank=False, null=False)
     last_name2 = models.CharField(max_length=45, blank=False, null=False)
-    rut = models.CharField(max_length=20, blank=False, null=False)
+    rut = models.CharField(max_length=12, blank=False, null=False)
     email = models.CharField(max_length=30, blank=False, null=False, validators=[validarEmail])
     password = models.CharField(max_length=100, validators=[ValidarLongitudPassword])
 
@@ -121,20 +122,22 @@ def ValidarLongitud(cadena):
         raise forms.ValidationError(
             f'Error: Debe contener mínimo 3 caracteres'
         )
-def ValidarRut(cadena):
+def ValidarRut(rut):
     pass
+    # value = 11 - sum([ int(a)*int(b)  for a,b in zip(str(rut).zfill(8), '32765432')])%11
+    # return {10: 'K', 11: '0'}.get(value, str(value))
 
 
 
 # def Validar_Num_Pagare(pagare):
 
-def Validar_Fecha_Mora(fecha_final):
-    DATE_REGEX = re.compile(r'^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))')
-    if not DATE_REGEX.match(fecha_final):
-        raise forms.ValidationError(
-            f'Error de formato: {fecha_final} debe tener el siguiente formato dd-mm-aaaa'
-        )
-    if fecha_final >= datetime.datetime.now():
+def Validar_Fecha(fecha_final):
+    # DATE_REGEX = re.compile(r'^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))')
+    # if not DATE_REGEX.match(fecha_final):
+    #     raise forms.ValidationError(
+    #         f'Error de formato: {fecha_final} debe tener el siguiente formato dd-mm-aaaa'
+    #     )
+    if fecha_final >= date.today():
         raise forms.ValidationError(
             f'Error fecha: {fecha_final} no puede estar en el futuro'
         )
@@ -147,36 +150,37 @@ def Validar_Monto_a_Pagar(monto_a_pagar):
         )        
 
 
-def Validar_Fecha_Suscripcion(fecha_suscripcion):
-    DATE_REGEX = re.compile(r'^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))')
-    if not DATE_REGEX.match(fecha_suscripcion):
-        raise forms.ValidationError(
-            f'Error de formato: {fecha_suscripcion} debe tener el siguiente formato dd-mm-aaaa'
-        )
-    if fecha_suscripcion >= datetime.datetime.now():
-        raise forms.ValidationError(
-            f'Error fecha: {fecha_suscripcion} no puede estar en el futuro'
-        )
+# def Validar_Fecha_Suscripcion(fecha_suscripcion):
+    # DATE_REGEX = re.compile(r'^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))')
+    # if not DATE_REGEX.match(fecha_suscripcion):
+    #     raise forms.ValidationError(
+    #         f'Error de formato: {fecha_suscripcion} debe tener el siguiente formato dd-mm-aaaa'
+    #     )
+    # if fecha_suscripcion >= datetime.datetime.now():
+    #     raise forms.ValidationError(
+    #         f'Error fecha: {fecha_suscripcion} no puede estar en el futuro'
+    #     )
 
 def Validar_Monto_Demandado(monto_demandado):
-    MONTO_REGEX = re.compile(r"[+-]?\d+(?:\.\d+)?")
-    if not MONTO_REGEX.match(monto_demandado):
-        raise forms.ValidationError(
-            f'Error de formato: {monto_demandado} debser un numero valido'
-        )  
+    # MONTO_REGEX = re.compile(r"[+-]?\d+(?:\.\d+)?")
 
+    # if not MONTO_REGEX.match(monto_demandado):
+    #     raise forms.ValidationError(
+    #         f'Error de formato: {monto_demandado} debser un numero valido'
+    #     )  
+    pass
 
 
 class Lawsuit_State(models.Model):
-    name_state = models.CharField(max_length=45)
-    demand_state = models.CharField(max_length=45)
+    name_state = models.CharField(max_length=45, default="escritura creada")
+    # demand_state = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Court(models.Model):
-    name_court = models.CharField(max_length=45)
-    comuna = models.CharField(max_length=45)
-
+    cod_tribunal = models.CharField(max_length=6, default="00")
+    name_court = models.CharField(max_length=45, default="no asigando")
+    comuna = models.CharField(max_length=45, default="no asigando")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -186,7 +190,7 @@ class Defendant(models.Model):
     last_name1 = models.CharField(max_length=45, blank=False, null=False, validators=[ValidarLongitud]) #este campo
     last_name2 = models.CharField(max_length=45, blank=False, null=False, validators=[ValidarLongitud]) #este campo
     address = models.CharField(max_length=255, blank=False, null=False,validators=[ValidarLongitud]) #este campo
-    rut = models.CharField(max_length=10, blank=False, null=False,validators=[ValidarRut]) #este campo
+    rut = models.CharField(max_length=13, blank=False, null=False,validators=[ValidarRut]) 
 
     defendant_created_by = models.ForeignKey(User, related_name="user_create_defendant", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -196,12 +200,12 @@ class Defendant(models.Model):
 
 class Lawsuit(models.Model):
     num_promissory_notes = models.CharField(max_length=45,blank=False, null=False)   #este campo
-    final_date = models.DateField(validators=[Validar_Fecha_Mora])  #este campo
+    final_date = models.DateField(validators=[Validar_Fecha])  #este campo
     mount_to_pay = models.CharField(max_length=255, validators=[Validar_Monto_a_Pagar]) #este campo
     num_operation = models.CharField(max_length=255, blank=False, null=False) #este campo
-    suscription_date= models.DateField(validators=[Validar_Fecha_Suscripcion]) #este campo
+    suscription_date= models.DateField(validators=[Validar_Fecha]) #este campo
     demand_amount= models.IntegerField(validators=[Validar_Monto_Demandado]) #este campo
-    cause_rol = models.CharField(max_length=45) 
+    cause_rol = models.CharField(max_length=45, default="no asigando") 
     
     current_defendant = models.ForeignKey(Defendant, related_name="defendant_lawsuit", on_delete = models.CASCADE)
     current_demand_state = models.ForeignKey(Lawsuit_State, related_name="current_demand_lawsuits", on_delete = models.CASCADE)

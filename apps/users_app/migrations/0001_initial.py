@@ -93,10 +93,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('num_promissory_notes', models.CharField(max_length=45)),
-                ('final_date', models.DateField(validators=[apps.users_app.models.Validar_Fecha_Mora])),
+                ('final_date', models.DateField(validators=[apps.users_app.models.Validar_Fecha])),
                 ('mount_to_pay', models.CharField(max_length=255, validators=[apps.users_app.models.Validar_Monto_a_Pagar])),
                 ('num_operation', models.CharField(max_length=255)),
-                ('suscription_date', models.DateField(validators=[apps.users_app.models.Validar_Fecha_Suscripcion])),
+                ('suscription_date', models.DateField(validators=[apps.users_app.models.Validar_Fecha])),
                 ('demand_amount', models.IntegerField(validators=[apps.users_app.models.Validar_Monto_Demandado])),
                 ('cause_rol', models.CharField(max_length=45)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),

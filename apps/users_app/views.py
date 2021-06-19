@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from apps.users_app.forms.register import AdministratorForm
 from apps.users_app.forms.login import LoginAdministrator, LoginUser
 from apps.secr_app.forms.new_lawsuit import DefendantForm, LawsuitForm
-from .makedata import make_user_type
+from .makedata import make_user_type, make_lawsuit_state, make_court
 
 
 
@@ -12,7 +12,7 @@ def index(request):
     if  'id'  in request.session and 'user_type' in request.session: # hay sesión iniciada?
         if  request.session['user_type'] == "administrator": #es administrador? redirige a la app admin_app
             return redirect( '/administrator')
-        if  request.session['user_type'] == "secretary": #es secretaria? redirige a la app secr_app
+        if  request.session['user_type'] == "secretaria": #es secretaria? redirige a la app secr_app
             return redirect( '/secretary')
         if  request.session['user_type'] == "procuradora": #es procuradora? redirige a la app proc_app
             return redirect( '/procuradora')
@@ -109,27 +109,6 @@ def make_administrator(request): # si es get, despliega el formulario para ingre
             return render(request, 'make_administrator.html', context)
 
 
- 
-
-
-    
-
-
-
-
-    
-
-
-
-    
-
-
-
-
-
-# def login_secretary(request):
-#     return render(re)
-
 
 def logout(request):
     request.session.delete()
@@ -138,4 +117,7 @@ def logout(request):
 
 def makedata(request):
     make_user_type()
+    make_lawsuit_state()
+    make_court()
+
     return redirect('/')
