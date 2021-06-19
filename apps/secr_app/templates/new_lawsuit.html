@@ -29,7 +29,7 @@
             <a href="/">Atrás</a>
             <div class="row ">
 
-                <form action="create_lawsuit" method="POST" class="m-2  bg-light row justify-content-center"
+                <form action="create_lawsuit" method="POST" class="m-2  bg-light row justify-content-center" id="formulario"
                     target="_blank">
                     {% csrf_token %}
                     <div class="col-5 border mt-4">
@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="row justify-content-center">
-                        <button type='submit' class="btn btn-primary m-2 col-auto">Crear Demanda</button>
+                        <button type='submit' class="btn btn-primary m-2 col-auto" id="boton">Crear Demanda</button>
                     </div>
 
                 </form>
@@ -80,6 +80,27 @@
                 myFunc(); //call another function too
             });
         </script>
+
+
+        <!-- <script>
+            $(document).ready(function () {
+
+                $("#formulario").submit(function (e) {
+
+                    //stop submitting the form to see the disabled button effect
+                    e.preventDefault();
+
+                    //disable the submit button
+                  
+
+                    //disable a normal button
+                    $("#boton").attr("disabled", true);
+
+                    return true;
+
+                });
+            });
+        </script> -->
         <script src="{% static 'jquery.rut.js' %}"></script>
         <script src="../../users_app/static/jquery.rut.js"></script>
 </body>

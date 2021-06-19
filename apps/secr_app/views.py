@@ -7,6 +7,7 @@ from .forms.new_lawsuit import LawsuitForm, DefendantForm
 from apps.users_app.models import    Lawsuit, Defendant
 from .utils import render_to_pdf
 from django.http import HttpResponse
+# import webbrowser
 # 
 
 def index(request):
@@ -74,7 +75,8 @@ def create_lawsuit(request):
             }
 
             pdf = render_to_pdf('lawsuitpdf.html', context)
-            
+            # webbrowser.open_new('/') 
+            redirect('/')
             return  HttpResponse(pdf, content_type='application/pdf')
             # return render(request, 'lawsuitpdf.html',context)
 
@@ -82,6 +84,7 @@ def create_lawsuit(request):
         print("no es valido"*10)
         context = {
             'defendantform' : defendantform,
+            'lawsuitform' : lawsuitform,
         }
         return render(request, 'new_lawsuit.html',context)
 

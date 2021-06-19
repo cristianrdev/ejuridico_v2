@@ -190,7 +190,7 @@ class Defendant(models.Model):
     last_name1 = models.CharField(max_length=45, blank=False, null=False, validators=[ValidarLongitud]) #este campo
     last_name2 = models.CharField(max_length=45, blank=False, null=False, validators=[ValidarLongitud]) #este campo
     address = models.CharField(max_length=255, blank=False, null=False,validators=[ValidarLongitud]) #este campo
-    rut = models.CharField(max_length=13, blank=False, null=False,validators=[ValidarRut]) 
+    rut = models.CharField(max_length=25, blank=False, null=False,validators=[ValidarRut]) 
 
     defendant_created_by = models.ForeignKey(User, related_name="user_create_defendant", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -204,7 +204,7 @@ class Lawsuit(models.Model):
     mount_to_pay = models.CharField(max_length=255, validators=[Validar_Monto_a_Pagar]) #este campo
     num_operation = models.CharField(max_length=255, blank=False, null=False) #este campo
     suscription_date= models.DateField(validators=[Validar_Fecha]) #este campo
-    demand_amount= models.IntegerField(validators=[Validar_Monto_Demandado]) #este campo
+    demand_amount= models.CharField(max_length=255, validators=[Validar_Monto_Demandado]) #este campo
     cause_rol = models.CharField(max_length=45, default="no asigando") 
     
     current_defendant = models.ForeignKey(Defendant, related_name="defendant_lawsuit", on_delete = models.CASCADE)
