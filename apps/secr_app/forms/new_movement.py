@@ -20,9 +20,10 @@ class NewMovementForm(ModelForm):
                 'current_demand_state': 'Cambiar de estado:',
 
         }
-    # def __init__(self, name_state, *args, **kwargs):
-    #     super(NewMovementForm, self).__init__(*args, **kwargs)
-    #     self.fields['name_state'].queryset = Lawsuit.objects.filter(current_demand_state__name_state__in = ["caratula asignada", "escritura creada"])
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.fields['current_demand_state'].queryset = Lawsuit.objects.filter(current_demand_state__name_state__in = ["caratula asignada", "escritura creada"])
+        self.fields['current_demand_state'].queryset = Lawsuit_State.objects.filter(name_state__in = ["caratula asignada", "escritura creada", "despachese mandamento"])
 
 
 class DocumentForm(forms.Form):
