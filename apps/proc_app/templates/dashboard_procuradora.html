@@ -6,19 +6,57 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
     <title>Procuradora  </title>
 </head>
 
 <body>
-    {% include "user_bar.html" %}
     <div class="container">
-        <h3>Dashboard procuradora</h3>
+        {% include "user_bar.html" %}
 
+        <div class="row">
+            <h4 class="text-center">Dashboard {{this_user.type.type_name}}</h4>
+        </div>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nombres</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Rut</th>
+                    <th scope="col">Estado de la demanda</th>
+                    <th scope="col">Tribunal</th>
+                    <th scope="col">Fecha Escrito</th>
+                    <th scope="col">Creada por</th>
+                    <th scope="col">Acción</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for lawsuit in all_lawsuits.all|dictsort:"created_at" %}
+                <tr>
+
+                    <td>{{lawsuit.current_defendant.first_name1}} {{lawsuit.current_defendant.first_name2}}</td>
+                    <td>{{lawsuit.current_defendant.last_name1}} {{lawsuit.current_defendant.last_name2}}</td>
+                    <td>{{lawsuit.current_defendant.rut}}</td>
+                    <td>{{lawsuit.current_demand_state.name_state}}</td>
+                    <td>{{lawsuit.current_court.name_court}}</td>
+                    <td>{{lawsuit.created_at}}</td>
+                    <td>{{lawsuit.lawsuit_created_by.first_name1}} {{lawsuit.lawsuit_created_by.last_name1}}</td>
+                    <td><a href="lawsuit_detail/{{lawsuit.id}}">Detalle</a></td>
+
+
+                </tr>
+                {% endfor%}
+
+            </tbody>
+
+        </table>
+
+
+        <div class="text-center text-muted">(Ordenados del más antiguo)</div>
     </div>
+
 </body>
 
 </html>

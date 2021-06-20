@@ -64,10 +64,13 @@ def login_user(request): #LOGIN SECRETARIA Y PROCURADORA
             if request.session['user_type'] == "secretaria":
                 print("es secretaria")
                 return redirect('/secretary')
-            if this_user.type.id == "procuradora":
+
+            if request.session['user_type'] == "procuradora":
                 print("es procuradora")
+                return redirect('/procuradora')
 
         print("Login satisfactorio")
+                
         
         # si no es válido render template del mismo form
       

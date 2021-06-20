@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models import query
 from django.forms import ModelForm
-from apps.users_app.models import Lawsuit, LawsuitHistory, Lawsuit_State
+from apps.users_app.models import Lawsuit, LawsuitHistory, Lawsuit_State, Court
 
 
 class NewMovementForm(ModelForm):
@@ -28,3 +28,20 @@ class NewMovementForm(ModelForm):
 
 class DocumentForm(forms.Form):
     docfile = forms.FileField(label='Seleccione el documento')
+# quedé acá-----------------------------------------------------
+class AddCourt(ModelForm):
+    class Meta:
+        model = Lawsuit
+        fields = ['current_court']
+        widgets = {
+            
+            'current_court': forms.Select( attrs = {"class":"form-control "}),
+
+
+            }
+            
+        labels = {
+                'current_court': 'Cambiar de estado:',
+
+        }
+
