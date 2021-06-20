@@ -14,7 +14,7 @@ def make_lawsuit_state():
 
     Lawsuit_State.objects.create(name_state = "escritura creada") #secretaria
     Lawsuit_State.objects.create(name_state = "caratula asignada") #secretaria
-    Lawsuit_State.objects.create(name_state = "despachese mandamento") #secretaria
+    Lawsuit_State.objects.create(name_state = "despachese mandamiento") #secretaria
 
     Lawsuit_State.objects.create(name_state = "demanda proveida") #procuradora, una vez el juez aprueba tras haber revisado el pagaré original
     Lawsuit_State.objects.create(name_state = "solicita notificacion demandado") #procuradora, solicita a receptor judicial notificar al demandado

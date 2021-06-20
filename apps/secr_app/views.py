@@ -8,6 +8,7 @@ from apps.secr_app.forms.new_movement import NewMovementForm, DocumentForm
 from apps.users_app.models import    Lawsuit, Defendant, LawsuitHistory
 from .utils import render_to_pdf
 from django.http import HttpResponse
+from django.forms import ModelChoiceField
 
 
 # import webbrowser
@@ -17,6 +18,7 @@ def index(request):
     if not 'id' in request.session or request.session['user_type'] != "secretaria":
         return redirect('/')
     this_user= User.objects.get(id = int(request.session['id'])) 
+    all_pending_lawsuits = Lawsuit.objects.filter(current_demand_state__name_state__in = ["caratula asignada", "escritura creada"]) #las tareas pendientes son los estados carátula asiganda y escritura creada
     all_lawsuits = Lawsuit.objects.all()
     all_defendants = Defendant.objects.all()
 
@@ -24,6 +26,7 @@ def index(request):
     context = {
         'this_user' : this_user,
         'all_lawsuits' : all_lawsuits,
+        'all_pending_lawsuits' : all_pending_lawsuits,
         'all_defendants' : all_defendants,
     }
     return render(request, 'dashboard_secretary.html', context)
@@ -107,10 +110,14 @@ def lawsuit_detail(request, id_lawsuit):
     this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
     this_defendant = this_lawsuit.current_defendant
     this_lawsuit_history = this_lawsuit.lawsuit_history
-    document_form = DocumentForm
+    # query_set = Lawsuit.objects.filter(current_demand_state__name_state__in = ["caratula asignada", "escritura creada"])
+    document_form = DocumentForm()
     # new_movement_form = NewMovementForm()
+    
     current_state = this_lawsuit.current_demand_state
     new_movement_form = NewMovementForm(initial= {'current_demand_state': current_state})
+   
+    print(new_movement_form)
     context = {
         'this_user' : this_user,
         'this_lawsuit' : this_lawsuit,

@@ -34,29 +34,36 @@
                 <p>Fecha Suscripción Pagaré: {{this_lawsuit.suscription_date}}</p>
                 <p>Cuantía de la Demanda: {{this_lawsuit.demand_amount}}</p>
             </div>
-            <div class="col-auto">
-                <h5 class="text-center">Ingrese Nuevo movimiento</h5>
-                <form action="/secretary/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="post" class="row" enctype="multipart/form-data">
+
+            {% if this_lawsuit.current_demand_state.name_state == "escritura creada" or  this_lawsuit.current_demand_state.name_state == "caratula asignada"%}
+            <div class="row justify-content-center mt-4">
+
+
+                <h5 class="text-center">Notificar avance de la causa</h5>
+                <form action="/secretary/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="post"
+                    class="col-auto border p-2 rounded" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="col-auto">
+                    <div class="">
                         {{new_movement_form.as_p}}
                     </div>
 
-                    <div class="col-auto">
+                    <div class="">
                         {{document_form}}
                     </div>
-                    
-                    
+
+
                     <button type='submit' class="btn btn-primary col-auto m-2">Registrar Movimiento</button>
                 </form>
 
             </div>
+            {% endif %}
 
 
 
         </div>
         <div class="row justify-content-center">
-            <a href="/secretary/lawsuit_detail/re_make_lawsuitpdf/{{this_lawsuit.id}}" class="col-auto" target="_blank">Volver a crear PDF escrito</a>
+            <a href="/secretary/lawsuit_detail/re_make_lawsuitpdf/{{this_lawsuit.id}}" class="col-auto"
+                target="_blank">Volver a crear PDF escrito</a>
 
         </div>
         <a href="/">Atrás</a>
@@ -68,7 +75,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Movimiento anterior</th>
+                        <th scope="col">Estado anterior</th>
+                        <th scope="col"></th>
                         <th scope="col">Estado actual</th>
                         <th scope="col">Movimiento Hecho por:</th>
                         <th scope="col">Documento:</th>
@@ -82,9 +90,10 @@
                     <tr>
 
                         <td>{{history.past_state.name_state}}</td>
+                        <td>---></td>
                         <td>{{history.current_state.name_state}}</td>
-                        <td>{{history.change_made_by.first_name1}} {{lawsuit.change_made_by.last_name1}}</td>
-                        <td> <a href="/media/{{history.docfile.name}}">{{history.docfile.name}}</a></td>
+                        <td>{{history.change_made_by.first_name1}} {{history.change_made_by.last_name1}}</td>
+                        <td> {% if history.docfile.name %}<a href="/media/{{history.docfile.name}}">Ver Documento</a> {% endif %}</td>
                         <td>{{history.created_at}}</td>
 
 
