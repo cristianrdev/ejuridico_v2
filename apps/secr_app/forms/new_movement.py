@@ -23,7 +23,7 @@ class NewMovementForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.fields['current_demand_state'].queryset = Lawsuit.objects.filter(current_demand_state__name_state__in = ["caratula asignada", "escritura creada"])
-        self.fields['current_demand_state'].queryset = Lawsuit_State.objects.filter(name_state__in = ["caratula asignada", "escritura creada", "despachese mandamento"])
+        self.fields['current_demand_state'].queryset = Lawsuit_State.objects.filter(name_state__in = ["caratula asignada", "escritura creada", "despachese mandamiento"])
 
 
 class DocumentForm(forms.Form):
