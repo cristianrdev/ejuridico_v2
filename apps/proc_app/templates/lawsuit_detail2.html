@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +12,7 @@
 
 <body>
     <div class="container">
+       
         {% include "user_bar.html" %}
         <a href="/">Atrás</a>
         <div class="row">
@@ -34,17 +36,27 @@
                 <p>Fecha Suscripción Pagaré: {{this_lawsuit.suscription_date}}</p>
                 <p>Cuantía de la Demanda: ${{this_lawsuit.demand_amount}}</p>
             </div>
-            <div class="col-auto">
-                <h5 class="text-center">Ingrese Nuevo movimiento</h5>
-                <form action="/secretary/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="POST">
+            
+            {% if not this_lawsuit.current_demand_state.name_state == "escritura creada" or  this_lawsuit.current_demand_state.name_state == "caratula asignada"%}
+            <div class="row justify-content-center mt-4">
+                <h5 class="text-center">Notificar avance de la causa</h5>
+                <form action="/procuradora/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="post"
+                    class="col-auto border p-2 rounded" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{new_movement_form.as_p}}
+                    <div class="">
+                        {{new_movement_form.as_p}}
+                    </div>
+
+                    <div class="">
+                        {{document_form}}
+                    </div>
+
+
                     <button type='submit' class="btn btn-primary col-auto m-2">Registrar Movimiento</button>
                 </form>
 
             </div>
-
-
+            {% endif %}
 
         </div>
         
@@ -53,13 +65,14 @@
         <div class="row">
             <h4>Historial de la demanda</h4>
 
-
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Movimiento anterior</th>
+                        <th scope="col">Estado anterior</th>
+                        <th scope="col"></th>
                         <th scope="col">Estado actual</th>
                         <th scope="col">Movimiento Hecho por:</th>
+                        <th scope="col">Documento:</th>
                         <th scope="col">Fecha Movimiento:</th>
 
 
@@ -70,27 +83,17 @@
                     <tr>
 
                         <td>{{history.past_state.name_state}}</td>
+                        <td>---></td>
                         <td>{{history.current_state.name_state}}</td>
                         <td>{{history.change_made_by.first_name1}} {{history.change_made_by.last_name1}}</td>
-                        <td>{{history.created_at}}</td>
-
-
-
+                        <td> {% if history.docfile.name %}<a href="/media/{{history.docfile.name}}">Ver Documento</a> {% endif %}</td>
+                        <td>{% timezone "America/Santiago" %} {{lawsuit.created_at| date:"m/d/Y"}} {% endtimezone  %} </td>
+                        <td>{% timezone "America/Santiago" %}  {{history.created_at| date:"m/d/Y"}} {% endtimezone  %}</td>
+                        
                     </tr>
                     {% endfor%}
-
                 </tbody>
-
             </table>
-
-
-
-
-
-
-
-
-
 
         </div>
         <a href="/">Atrás</a>

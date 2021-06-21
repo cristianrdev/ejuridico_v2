@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +20,7 @@
 
 
         <table class="table">
+            <h3 class="text-center">Demandas pendientes: </h3>
             <thead>
                 <tr>
                     <th scope="col">Nombres</th>
@@ -29,6 +31,51 @@
                     <th scope="col">Fecha Escrito</th>
                     <th scope="col">Creada por</th>
                     <th scope="col">Acción</th>
+                    <th scope="col">Permiso</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for lawsuit in all_lawsuits.all|dictsort:"created_at" %}
+                {% if  lawsuit.current_demand_state.name_state == "escritura creada" or  lawsuit.current_demand_state.name_state == "caratula asignada" %}
+                <tr>
+
+                    <td>{{lawsuit.current_defendant.first_name1}} {{lawsuit.current_defendant.first_name2}}</td>
+                    <td>{{lawsuit.current_defendant.last_name1}} {{lawsuit.current_defendant.last_name2}}</td>
+                    <td>{{lawsuit.current_defendant.rut}}</td>
+                    <td>{{lawsuit.current_demand_state.name_state}}</td>
+                    <td>{{lawsuit.current_court.name_court}}</td>
+                    <td>{% timezone "America/Santiago" %} {{lawsuit.created_at| date:"m/d/Y"}} {% endtimezone  %} </td>
+                    <td> {% timezone "America/Santiago" %} {{lawsuit.created_at| date:"m/d/Y"}} {% endtimezone  %}</td>
+                    <td>{{lawsuit.lawsuit_created_by.first_name1}} {{lawsuit.lawsuit_created_by.last_name1}}</td>
+                    <td><a href="lawsuit_detail/{{lawsuit.id}}">Detalle</a></td>
+                    <td class="table-success">Si</td>
+
+                </tr>
+                {% endif %}
+                {% endfor%}
+
+            </tbody>
+
+        </table>
+
+
+        <div class="text-center text-muted">(Ordenados del más antiguo)</div>
+
+        <table class="table">
+            <h3 class="text-center">Todas demandas: </h3>
+            <thead>
+                <tr>
+                    <th scope="col">Nombres</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Rut</th>
+                    <th scope="col">Estado de la demanda</th>
+                    <th scope="col">Tribunal</th>
+                    <th scope="col">Fecha Escrito</th>
+                    <th scope="col">Creada por</th>
+                    <th scope="col">Acción</th>
+                    <th scope="col">Permiso</th>
 
                 </tr>
             </thead>
@@ -41,9 +88,15 @@
                     <td>{{lawsuit.current_defendant.rut}}</td>
                     <td>{{lawsuit.current_demand_state.name_state}}</td>
                     <td>{{lawsuit.current_court.name_court}}</td>
-                    <td>{{lawsuit.created_at}}</td>
+                    <td>{% timezone "America/Santiago" %} {{lawsuit.created_at| date:"m/d/Y"}} {% endtimezone  %} </td>
+                    <td>{{lawsuit.created_at| date:"m/d/Y"}}</td>
                     <td>{{lawsuit.lawsuit_created_by.first_name1}} {{lawsuit.lawsuit_created_by.last_name1}}</td>
                     <td><a href="lawsuit_detail/{{lawsuit.id}}">Detalle</a></td>
+                    {% if not lawsuit.current_demand_state.name_state == "escritura creada" or  lawsuit.current_demand_state.name_state == "caratula asignada"%}
+                    <td class="table-success">Si</td>
+                    {% else %}
+                    <td>No</td>
+                    {% endif %}
 
 
                 </tr>
@@ -52,9 +105,6 @@
             </tbody>
 
         </table>
-
-
-        <div class="text-center text-muted">(Ordenados del más antiguo)</div>
     </div>
 
 </body>
