@@ -14,15 +14,18 @@
         <br>
         <li>Materia : COBRO DE PAGARE COD:C 07</li>
         <li>Materia : EJECUTIVO</li>
-        <li>Demandante : Dojo Bank</li>
+        <br>
+        <li>Demandante : Banco Dojo Bank</li>
         <li>RUT : 78.907.435-1</li>
         <li>Representante : Fernando Salazar Moreno</li>
         <li>RUT: 7.890.098-1</li>
+        <br>
         <li>A.Patrocinante : María Luisa Ahumada Leiva</li>
         <li>RUT: 6.890.908-1</li>
+        <br>
         <li>Demandado: {{defendant.first_name1}} {{defendant.first_name2}} {{defendant.last_name1}} {{defendant.last_name2}}</li>
         <li>RUT : {{ defendant.rut }}</li>
-        <li>F.Ingreso Oficina : {{ lawsuit.created_at }}</li>
+        <li>F.Ingreso Oficina : {{lawsuit.created_at| date:"m/d/Y"}} </li>
         <li>Nº de Operación : {{ lawsuit.num_operation }}</li>
 
     </ul>
@@ -33,8 +36,8 @@
         S.J.L. EN LO CIVIL
         <br>
         <br>
-        <strong>NOMBRE ABOGADO REPRESENTANTE DEL BANCO</strong>, chileno, abogado, Empleado Bancario,
-        cédula nacional de identidad RUT ABOGADO REPRESENTANDO DEL BANCO, actuando en representacion del Banco
+        <strong>Fernando Salazar Moreno</strong>, chileno, abogado, Empleado Bancario,
+        cédula nacional de identidad <strong>7.890.098-1</strong> , actuando en representacion del Banco
         del Estado de Chile, Empresa autónoma del Estado, representado Legalmente por su Gerente General Ejecutivo, don
         Juan Cooper Alvarez, según se acreditará, ambos con domicilio en calle San Diego N°81, Piso 8, comuna de Santiago
         a U.S. respetuosamente digo:
@@ -42,16 +45,16 @@
         <br>
         El Banco del Estado es dueño del Pagaré Tarjeta de Crédito N° <strong> {{lawsuit.num_promissory_notes}} </strong>, asignado con la
         Operación Nº <strong> {{num_operation}} </strong>, que se acompaña, por un monto original ascendente a
-        $<strong> {{lawsuit.mount_to_pay}} </strong> y suscrito el <strong> {{lawsuit.suscription_date}} </strong> por don(ña) <strong> {{defendant.first_name1}} {{defendant.first_name2}} {{defendant.last_name1}} {{defendant.last_name2}}</strong>
+        $<strong> {{lawsuit.mount_to_pay}} </strong> y suscrito el <strong> {{lawsuit.suscription_date| date:"m/d/Y"}} </strong> por don(ña) <strong> {{defendant.first_name1}} {{defendant.first_name2}} {{defendant.last_name1}} {{defendant.last_name2}}</strong>
         , chileno(a), ignoro profesión u oficio, domiciliado (a) en <strong> {{defendant.address}} </strong>
         <br>
         <br>
         Doy por expresamente reproducido el Pagaré‚ ya citado.
         En el Pagaré‚ se señala que el deudor se comprometió a pagar la cantidad referida a mi
         
-        representada en una sola cuota, con vencimiento el día <strong> {{lawsuit.final_date}} </strong> .
+        representada en una sola cuota, con vencimiento el día <strong> {{lawsuit.final_date| date:"m/d/Y"}} </strong> .
         
-        Es del caso que el deudor (a) no pagó lo estipulado con fecha <strong> {{lawsuit.final_date}} </strong> .
+        Es del caso que el deudor (a) no pagó lo estipulado con fecha <strong> {{lawsuit.final_date| date:"m/d/Y"}} </strong> .
         En el pagaré, el deudor se comprometió a que en caso de incumplimiento de la obligación, pagaría
         
         intereses penales del máximo convencional a las tasas que rigiesen durante el retardo.
@@ -70,7 +73,7 @@
         <br>
         <strong>SIRVASE S.S.</strong>, tener por deducida demanda Ejecutiva de cobro de Pagar‚ en contra de don
         <strong> {{defendant.first_name1}} {{defendant.first_name2}} {{defendant.last_name1}} {{defendant.last_name2}}</strong> , ya individualizado(a), admitirla a tramitación y ordenar que se le
-        requiera de pago y se despache mandamiento de ejecución y embargo en su contra por el total de $<strong> {{demand_amount}} </strong> .-
+        requiera de pago y se despache mandamiento de ejecución y embargo en su contra por el total de $<strong> {{lawsuit.demand_amount}} </strong> .-
         , que es la suma a la cual está reducida la deuda al día de la mora; más los intereses penales máximos que la Ley
         permita estipular, calculados desde la fecha del incumplimiento o retardo hasta la fecha del pago efectivo de lo
         debido, y las costas de la causa; bajo el apercibimiento de embargárseles bienes suficientes y continuar con la
@@ -98,14 +101,24 @@
     </div>
     <br>
     <br>
-    <div style="display: flex; justify-content:space-around">
-        <div>Fernando Salazar Moreno                                     María Luisa Ahumada Leiva</div>
-        <div>María Luisa Ahumada Leiva                                             7.890.098-1</div>
-    </div>
-    <div style="display: flex; justify-content:space-around">
-        <div>6.890.908-1</div>
-        <div>7.890.098-1</div>
-    </div>
+    <!-- <div>
+        <div style="margin-left: 100px;">Fernando Salazar Moreno &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; María Luisa Ahumada Leiva  </div>
+        <div style="margin-left: 130px;">7.890.098-1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.890.908-1</div>                
+    </div> -->
+   
 
+    <table>
+        <tr>
+            <td><div class="float" style="margin-left: 100px;"> Fernando Salazar Moreno</div></td>
+            <td><div class="float" style="margin-left: 130px;"> María Luisa Ahumada Leiva </div></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td><div class="float" style="margin-left: 130px;"> 7.890.098-1</div></td>
+            <td><div class="float" style="margin-left: 160px;"> 6.890.908-1 </div></td>
+        </tr>
+    </table>
+    
 </body>
 </html>

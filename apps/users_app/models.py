@@ -185,6 +185,8 @@ class Court(models.Model):
     comuna = models.CharField(max_length=45, default="no asigando")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.name_court
 
 class Defendant(models.Model): 
     first_name1 = models.CharField(max_length=45, blank=False, null=False, validators=[ValidarLongitud]) #este campo
@@ -207,7 +209,7 @@ class Lawsuit(models.Model):
     num_operation = models.CharField(max_length=255, blank=False, null=False) #este campo
     suscription_date= models.DateField(validators=[Validar_Fecha]) #este campo
     demand_amount= models.CharField(max_length=255, validators=[Validar_Monto_Demandado]) #este campo
-    cause_rol = models.CharField(max_length=45, default="no asigando") 
+    cause_rol = models.CharField(max_length=45, default="C-") 
     
     current_defendant = models.ForeignKey(Defendant, related_name="defendant_lawsuit", on_delete = models.CASCADE)
     current_demand_state = models.ForeignKey(Lawsuit_State, related_name="current_demand_lawsuits", on_delete = models.CASCADE)

@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}  <!-- carga la zona horaria -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +16,7 @@
         <a href="/">Atrás</a>
         <div class="row">
             <h4 class="text-center">Dashboard {{this_user.type.type_name}}</h4>
-            <h5 class="text-center">Demanda ID, {{this_lawsuit.id}} creada por
+            <h5 class="text-center">Demanda ID {{this_lawsuit.id}} ,  creada por
                 {{this_lawsuit.lawsuit_created_by.first_name1}} {{this_lawsuit.lawsuit_created_by.last_name1}}</h5>
         </div>
         <div class="row justify-content-center">
@@ -24,25 +25,46 @@
                 <p>Apellidos : {{this_defendant.last_name1}} {{this_defendant.last_name2}}</p>
                 <p>Rut :{{this_defendant.rut}}</p>
                 <p>Dirección: {{this_defendant.address}} </p>
+                <p>Causa Rol :  {% if this_lawsuit.cause_rol == "C-" %} 
+                         No asignado 
+                    {% else %} 
+                        {{this_lawsuit.cause_rol}} 
+                    {% endif %}</p>
+                <p>Tribunal : {{this_lawsuit.current_court}}</p>
             </div>
 
             <div class="col-auto  bg-light p-3">
                 <p>Numero Pagaré : {{this_lawsuit.num_promissory_notes}}</p>
                 <p>Fecha Mora : {{this_lawsuit.final_date}}</p>
-                <p>Monto de Pagaré : {{this_lawsuit.mount_to_pay}}</p>
+                <p>Monto de Pagaré : ${{this_lawsuit.mount_to_pay}}</p>
                 <p>Número de operación : {{this_lawsuit.num_operation}}</p>
                 <p>Fecha Suscripción Pagaré: {{this_lawsuit.suscription_date}}</p>
-                <p>Cuantía de la Demanda: {{this_lawsuit.demand_amount}}</p>
+                <p>Cuantía de la Demanda: ${{this_lawsuit.demand_amount}}</p>
+ 
             </div>
 
-            {% if this_lawsuit.current_demand_state.name_state == "escritura creada" or  this_lawsuit.current_demand_state.name_state == "caratula asignada"%}
+            
             <div class="row justify-content-center mt-4">
+                <!-- formulario asigar tribunal -->
+                {% if this_lawsuit.current_court.name_court == "no asignado" %}
+                <form action="/secretary/lawsuit_detail/update_lawsuit_court/{{this_lawsuit.id}}" method="post" class="col-auto border p-2 rounded">
+                    
+                    <div>
+                        {% csrf_token %}
+                        {{add_court_form.as_p}}
+                    </div>
+                    <button type='submit' class="btn btn-primary col-auto m-2">Guardar</button>
+                    
+                </form>
+                {% endif %}
 
-
+                <!-- Formulario para cambiar de estado -->
+                {% if this_lawsuit.current_demand_state.name_state == "caratula asignada" %}
                 <h5 class="text-center">Notificar avance de la causa</h5>
                 <form action="/secretary/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="post"
                     class="col-auto border p-2 rounded" enctype="multipart/form-data">
                     {% csrf_token %}
+
                     <div class="">
                         {{new_movement_form.as_p}}
                     </div>
@@ -50,13 +72,11 @@
                     <div class="">
                         {{document_form}}
                     </div>
-
-
                     <button type='submit' class="btn btn-primary col-auto m-2">Registrar Movimiento</button>
                 </form>
-
+                {% endif %}
             </div>
-            {% endif %}
+            
 
 
 
@@ -94,12 +114,13 @@
                         <td>{{history.current_state.name_state}}</td>
                         <td>{{history.change_made_by.first_name1}} {{history.change_made_by.last_name1}}</td>
                         <td> {% if history.docfile.name %}<a href="/media/{{history.docfile.name}}">Ver Documento</a> {% endif %}</td>
-                        <td>{{history.created_at}}</td>
+                       
+                        <td> {% timezone "America/Santiago" %} {{history.created_at}} {% endtimezone  %}</td>
 
 
 
                     </tr>
-                    {% endfor%}
+                    {% endfor %}
 
                 </tbody>
 

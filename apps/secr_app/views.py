@@ -4,7 +4,7 @@ from apps.users_app.models import Administrator, Court, Lawsuit_State, User, Use
 from django.shortcuts import redirect, render
 from apps.users_app.forms.register import UserForm
 from .forms.new_lawsuit import LawsuitForm, DefendantForm
-from apps.secr_app.forms.new_movement import NewMovementForm, DocumentForm
+from apps.secr_app.forms.new_movement import NewMovementForm, DocumentForm, AddCourt
 from apps.users_app.models import    Lawsuit, Defendant, LawsuitHistory
 from .utils import render_to_pdf
 from django.http import HttpResponse
@@ -115,7 +115,9 @@ def lawsuit_detail(request, id_lawsuit):
     # new_movement_form = NewMovementForm()
     
     current_state = this_lawsuit.current_demand_state
+    current_court = this_lawsuit.current_court
     new_movement_form = NewMovementForm(initial= {'current_demand_state': current_state})
+    add_court_form = AddCourt(initial= {'current_court': current_court})
    
     print(new_movement_form)
     context = {
@@ -125,6 +127,7 @@ def lawsuit_detail(request, id_lawsuit):
         'this_lawsuit_history' : this_lawsuit_history,
         'new_movement_form' : new_movement_form,
         'document_form' : document_form,
+        'add_court_form' : add_court_form,
         
 
     }
@@ -195,8 +198,55 @@ def update_lawsuit_state(request, id_lawsuit):
         
 
     }
+
     return render(request, "lawsuit_detail.html", context)
 
+def update_lawsuit_court(request, id_lawsuit):
+    if not 'id' in request.session or request.session['user_type'] != "secretaria":
+        return redirect('/')
+    this_user = User.objects.get(id = int(request.session['id']))
+    this_lawsuit = Lawsuit.objects.get(id= id_lawsuit)
+    past_state = this_lawsuit.current_demand_state #estado antiguo de la demanda
+    add_court_form = AddCourt(request.POST)
+    print(request.POST['current_court'])
+    if add_court_form.is_valid():
+        this_lawsuit.cause_rol = request.POST['cause_rol']
+        this_lawsuit.current_demand_state = Lawsuit_State.objects.get(name_state = "caratula asignada")
+        this_lawsuit.current_court = Court.objects.get(id = request.POST['current_court'])
+
+        this_lawsuit.save(update_fields = ['cause_rol','current_demand_state','current_court'])
+       
+        new_history  = LawsuitHistory.objects.create(          #generar el cambio en el historial de la demanda
+            lawsuit_associate = this_lawsuit, 
+            past_state = past_state, #estado primera creación
+            current_state = this_lawsuit.current_demand_state,
+            change_made_by = this_user,
+                )
+    document_form = DocumentForm()
+    current_state = this_lawsuit.current_demand_state           
+    new_movement_form = NewMovementForm()
+    this_defendant = this_lawsuit.current_defendant
+    this_lawsuit_history = this_lawsuit.lawsuit_history
+    context = {
+        'this_user' : this_user,
+        'this_lawsuit' : this_lawsuit,
+        'this_defendant' : this_defendant,
+        'this_lawsuit_history' : this_lawsuit_history,
+        'new_movement_form' : new_movement_form,
+        'document_form' : document_form,
+        'add_court_form' : add_court_form,
+        
+
+    }
+
+    return render(request, "lawsuit_detail.html", context)
+
+
+
+    
+
+
+    
 
 
 

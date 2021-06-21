@@ -17,13 +17,13 @@ class NewMovementForm(ModelForm):
             }
 
         labels = {
-                'current_demand_state': 'Cambiar de estado:',
+                'current_demand_state': 'Cambiar de estado a:',
 
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.fields['current_demand_state'].queryset = Lawsuit.objects.filter(current_demand_state__name_state__in = ["caratula asignada", "escritura creada"])
-        self.fields['current_demand_state'].queryset = Lawsuit_State.objects.filter(name_state__in = ["caratula asignada", "escritura creada", "despachese mandamiento"])
+        self.fields['current_demand_state'].queryset = Lawsuit_State.objects.filter(name_state__in = ["despachese mandamiento"])
 
 
 class DocumentForm(forms.Form):
@@ -32,16 +32,15 @@ class DocumentForm(forms.Form):
 class AddCourt(ModelForm):
     class Meta:
         model = Lawsuit
-        fields = ['current_court']
+        fields = ['cause_rol','current_court']
         widgets = {
-            
-            'current_court': forms.Select( attrs = {"class":"form-control "}),
-
-
+            'cause_rol': forms.TextInput(attrs = {"class":"form-control", 'autocomplete' : 'off'}),
+            'current_court': forms.Select( attrs = {"class":"form-control" }),
             }
             
         labels = {
-                'current_court': 'Cambiar de estado:',
+                'cause_rol' : 'Causa Rol',
+                'current_court': 'Asignar Tribunal:',
 
         }
 
