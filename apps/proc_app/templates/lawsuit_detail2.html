@@ -36,9 +36,9 @@
                 <p>Fecha Suscripción Pagaré: {{this_lawsuit.suscription_date}}</p>
                 <p>Cuantía de la Demanda: ${{this_lawsuit.demand_amount}}</p>
             </div>
-            
-            {% if not this_lawsuit.current_demand_state.name_state == "escritura creada" or  this_lawsuit.current_demand_state.name_state == "caratula asignada"%}
-            <div class="row justify-content-center mt-4">
+            <!-- formulario ingresar estado de la demanda -->
+           
+            <div class="row justify-content-center mt-4" {{hidden}}>
                 <h5 class="text-center">Notificar avance de la causa</h5>
                 <form action="/procuradora/lawsuit_detail/update_lawsuit_state/{{this_lawsuit.id}}" method="post"
                     class="col-auto border p-2 rounded" enctype="multipart/form-data">
@@ -52,11 +52,11 @@
                     </div>
 
 
-                    <button type='submit' class="btn btn-primary col-auto m-2">Registrar Movimiento</button>
+                    <button type='submit' class="btn btn-primary col-auto m-2" {{hidden}}>Registrar Movimiento</button>
                 </form>
 
             </div>
-            {% endif %}
+           
 
         </div>
         

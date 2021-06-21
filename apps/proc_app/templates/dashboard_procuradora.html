@@ -37,8 +37,8 @@
             </thead>
             <tbody>
                 
-                {% for lawsuit in all_lawsuits.all|dictsort:"created_at" %}
-                {% if  lawsuit.current_demand_state.name_state == "escritura creada" or  lawsuit.current_demand_state.name_state == "caratula asignada" %}
+                {% for lawsuit in all_pending_lawsuits|dictsort:"created_at" %}
+        
                 <tr>
 
                     <td>{{lawsuit.current_defendant.first_name1}} {{lawsuit.current_defendant.first_name2}}</td>
@@ -53,7 +53,7 @@
                     <td class="table-success">Si</td>
 
                 </tr>
-                {% endif %}
+           
                 {% endfor%}
 
             </tbody>
