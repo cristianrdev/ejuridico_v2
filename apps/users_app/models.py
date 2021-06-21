@@ -122,10 +122,21 @@ def ValidarLongitud(cadena):
         raise forms.ValidationError(
             f'Error: Debe contener mínimo 3 caracteres'
         )
-def ValidarRut(rut):
-    pass
-    # value = 11 - sum([ int(a)*int(b)  for a,b in zip(str(rut).zfill(8), '32765432')])%11
-    # return {10: 'K', 11: '0'}.get(value, str(value))
+def ValidarRut(valor):
+    rut_sincaracter = valor.replace("-", "").replace(".", "").replace(",", "")
+    dv_ingresado = valor[-1]
+    print(dv_ingresado)
+    value = 11 - sum([ int(a)*int(b)  for a,b in zip(str(rut_sincaracter).zfill(9), '32765432')])%11
+    dv_calculado = {10: 'K',10: 'k', 11: '0'}.get(value, str(value))
+    print(dv_calculado)
+    if dv_ingresado == dv_calculado :
+        print("esta correcto")
+        return 
+    else :
+        print("es incorrecto")
+        raise forms.ValidationError(
+        f'Error de RUT: rut inválido, favor verifique')        
+
 
 
 
