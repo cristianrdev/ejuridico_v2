@@ -26,6 +26,12 @@
                 <p>Apellidos : {{this_defendant.last_name1}} {{this_defendant.last_name2}}</p>
                 <p>Rut :{{this_defendant.rut}}</p>
                 <p>Dirección: {{this_defendant.address}} </p>
+                <p>Causa Rol :  {% if this_lawsuit.cause_rol == "C-" %} 
+                         No asignado 
+                    {% else %} 
+                        {{this_lawsuit.cause_rol}} 
+                    {% endif %}</p>
+                <p>Tribunal : {{this_lawsuit.current_court}}</p>
             </div>
 
             <div class="col-auto  bg-light p-3">
